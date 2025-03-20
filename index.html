@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Learning Site</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Word Learning Site</h1>
+    <nav>
+      <button onclick="showSection('search')">Search</button>
+      <button onclick="showSection('practice')">Practice</button>
+      <button onclick="showSection('download')">Download</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Search Section -->
+    <section id="search" class="section">
+      <h2>Search</h2>
+      <input type="text" id="searchInput" placeholder="Enter a word">
+      <button onclick="searchWord()">Search</button>
+      <div id="searchResults"></div>
+    </section>
+
+    <!-- Practice Section -->
+    <section id="practice" class="section" style="display: none;">
+      <h2>Practice</h2>
+      <p id="practiceQuestion"></p>
+      <div id="practiceOptions"></div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="section" style="display: none;">
+      <h2>Download</h2>
+      <button onclick="exportData()">Export Data</button>
+      <input type="file" id="importFile" accept=".json">
+      <button onclick="importData()">Import Data</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
