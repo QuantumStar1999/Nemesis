@@ -577,7 +577,6 @@ function startPractice() {
     correctAnswerDetails.style.display = 'block';
   
     // Show the Next button
-    console.log('Showing Next button'); // Debugging
     nextButton.style.display = 'block';
   
     // Update last asked timestamp
