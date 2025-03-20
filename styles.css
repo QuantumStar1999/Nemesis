@@ -201,3 +201,120 @@ label {
   color: #333;
   margin-right: 10px;
 }
+
+/* Practice Section Styling */
+#practice {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#practice h2 {
+  color: #6200ea;
+  margin-bottom: 20px;
+}
+
+#practice label {
+  font-size: 16px;
+  color: #333;
+  margin-right: 10px;
+}
+
+#practice input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#practiceQuestion {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#practiceOptions button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#practiceOptions button:hover {
+  background-color: #ddd;
+}
+
+#practiceOptions button.correct {
+  background-color: #4caf50; /* Green */
+  color: white;
+}
+
+#practiceOptions button.incorrect {
+  background-color: #f44336; /* Red */
+  color: white;
+}
+
+#feedback {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#correctAnswerDetails {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#correctAnswerDetails h4 {
+  color: #6200ea;
+  margin-bottom: 10px;
+}
+
+#correctAnswerDetails p {
+  font-size: 16px;
+  color: #333;
+}
+
+#nextButton {
+  margin-top: 20px;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  /* transition: background-color 0.3s ease; */
+}
+
+#nextButton:hover {
+  background-color: #7c4dff;
+}
+/* Dropdown Styling */
+#questionType {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 10px 0;
+  background-color: white;
+  cursor: pointer;
+}
+
+label {
+  font-size: 16px;
+  color: #333;
+  margin-right: 10px;
+}
