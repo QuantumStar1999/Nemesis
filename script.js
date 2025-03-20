@@ -138,8 +138,6 @@ function displaySearchResultsThesaurus(entry) {
   resultsDiv.classList.add('active');
 }
 
-
-
 async function searchWorOxford(APP_ID, APP_KEY){
   const LANGUAGE = 'en-gb'; // Language code (English)
   const word = document.getElementById('searchInput').value.trim();
