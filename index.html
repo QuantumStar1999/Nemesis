@@ -3,43 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Learning Site</title>
+  <title>Vocabulary App</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>Word Learning Site</h1>
+  <div class="container">
+    <h1>Vocabulary App</h1>
     <nav>
       <button onclick="showSection('search')">Search</button>
       <button onclick="showSection('practice')">Practice</button>
       <button onclick="showSection('download')">Download</button>
     </nav>
-  </header>
 
-  <main>
     <!-- Search Section -->
-    <section id="search" class="section">
+    <section id="search" class="section active">
       <h2>Search</h2>
-      <input type="text" id="searchInput" placeholder="Enter a word">
-      <button onclick="searchWord()">Search</button>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Enter a word">
+        <button onclick="searchWord()">Search</button>
+      </div>
       <div id="searchResults"></div>
     </section>
 
     <!-- Practice Section -->
-    <section id="practice" class="section" style="display: none;">
-      <h2>Practice</h2>
-      <p id="practiceQuestion"></p>
-      <div id="practiceOptions"></div>
+    <section id="practice" class="section">
+        <h2>Practice</h2>
+        <div>
+            <label for="hoursSinceLastAsked">Delay before asking again (hours):</label>
+            <input type="number" id="hoursSinceLastAsked" value="0" min="0" step="1">
+        </div>
+        <button class="button" onclick="startPractice()">Start Practice</button>
+        <div id="practiceQuestion"></div>
+        <div id="practiceOptions"></div>
+        <div id="feedback"></div>
     </section>
+  
+  <!-- Download Section -->
+  <section id="download" class="section">
+    <h2>Download</h2>
+    <button class="button" onclick="exportData()">Export Vocabulary</button>
+    <input type="file" id="importFile" class="file-input" accept=".json">
+    <button class="button" onclick="importData()">Import Vocabulary</button>
+  </section>
 
     <!-- Download Section -->
-    <section id="download" class="section" style="display: none;">
+    <section id="download" class="section">
       <h2>Download</h2>
-      <button onclick="exportData()">Export Data</button>
+      <button onclick="exportData()">Export Vocabulary</button>
       <input type="file" id="importFile" accept=".json">
-      <button onclick="importData()">Import Data</button>
+      <button onclick="importData()">Import Vocabulary</button>
     </section>
-  </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
