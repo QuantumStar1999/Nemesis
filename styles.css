@@ -196,11 +196,7 @@ nav button:hover {
   margin: 10px 0;
 }
 
-label {
-  font-size: 16px;
-  color: #333;
-  margin-right: 10px;
-}
+
 
 /* Practice Section Styling */
 #practice {
@@ -215,11 +211,49 @@ label {
   margin-bottom: 20px;
 }
 
+#practice div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
 #practice label {
+  flex: 1;
+  text-align: right;
+  margin-right: 15px;
   font-size: 16px;
   color: #333;
-  margin-right: 10px;
+  white-space: nowrap;
 }
+
+#practice input,
+#practice select {
+  flex: 2;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* #practice button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#practice button:hover {
+  background-color: #7c4dff;
+} */
 
 #practice input {
   padding: 8px;
@@ -234,6 +268,12 @@ label {
   font-weight: bold;
   margin-bottom: 20px;
   color: #333;
+}
+
+#practiceOptions {
+  display: flex;
+  flex-direction: column;
+  /* gap: 10px; Adds spacing between buttons */
 }
 
 #practiceOptions button {
@@ -309,12 +349,15 @@ label {
   border-radius: 5px;
   font-size: 16px;
   margin: 10px 0;
+  
   background-color: white;
   cursor: pointer;
 }
 
 label {
+  display: inline-flex;
   font-size: 16px;
   color: #333;
-  margin-right: 10px;
-}
+  margin-right: 20px;
+} 
+
