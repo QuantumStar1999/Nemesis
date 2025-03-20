@@ -5,6 +5,11 @@ let priority = {};
 window.onload = () => {
   wordData = JSON.parse(localStorage.getItem('vocabWords')) || [];
   priority = JSON.parse(localStorage.getItem('vocabPriority')) || {};
+  document.getElementById("TAPIKEY").value = localStorage.getItem("TAPIKEY") || "";
+  document.getElementById("DAPIKEY").value = localStorage.getItem("DAPIKEY") || "";
+  document.getElementById("OAPIKEY").value = localStorage.getItem("OAPIKEY") || "";
+  document.getElementById("OAPIID").value = localStorage.getItem("OAPIID") || "";
+  document.getElementById('dictType').value = localStorage.getItem("dictType") || "default";
 };
 
 // Show the selected section
@@ -16,7 +21,207 @@ function showSection(sectionId) {
 }
 
 // Fetch word data from DictionaryAPI
-async function searchWord() {
+function searchWord(){
+  const searchType = document.getElementById('dictType').value;
+  localStorage.setItem('dictType',searchType);
+  if (searchType==="default"){
+    searchWordDefault();
+  }
+  else if (searchType==="TAPIKEY"){
+    const API_KEY = document.getElementById(searchType).value.trim();
+    localStorage.setItem("TAPIKEY", API_KEY);
+    searchWordThesaurus('thesaurus', API_KEY);
+  }
+  else if (searchType==="DAPIKEY"){
+    const API_KEY = document.getElementById(searchType).value.trim();
+    localStorage.setItem("DAPIKEY", API_KEY);
+    searchWordDictionary('collegiate', API_KEY);
+
+  }
+  else{
+    const API_ID = document.getElementById("OAPIID").value.trim();
+    const API_KEY = document.getElementById("OAPIKEY").value.trim();
+    localStorage.setItem("OAPIID", API_ID);
+    localStorage.setItem("OAPIKEY", API_KEY);
+    searchWorOxford(API_ID, API_KEY);
+  }
+}
+async function searchWordDictionary(API, API_KEY){
+
+}
+async function searchWordThesaurus(API, API_KEY) {
+
+  const word = document.getElementById('searchInput').value.trim();
+  if (!word) return;
+
+  try {
+    const response = await fetch(`https://www.dictionaryapi.com/api/v3/references/${API}/json/${word}?key=${API_KEY}`);
+    const data = await response.json();
+    const data_filtered = data.filter(ele => ele?.hwi?.hw === word);    
+    console.log("Uniltered",data);
+    console.log("Filtered",data_filtered);
+    document.getElementById('searchResults').innerHTML = '';
+    if (data_filtered && data_filtered.length > 0) {
+      document.getElementById('searchResults').innerHTML = '';
+      data_filtered.forEach(entry => {
+        displaySearchResultsThesaurus(entry); // Display results for each entry
+      });
+    } else {
+      alert('Word not found!');
+      document.getElementById('searchResults').classList.remove('active'); // Hide results
+    }
+  } catch (error) {
+    console.error('Error fetching word data:', error);
+    alert('Failed to fetch word data. Please try again.');
+    document.getElementById('searchResults').classList.remove('active'); // Hide results
+  }
+  
+}
+function displaySearchResultsThesaurus(entry) {
+  const resultsDiv = document.getElementById('searchResults');
+
+  // Display the word
+  resultsDiv.innerHTML += `<h3>${entry.hwi.hw}</h3>`;
+
+  // Display part of speech
+  if (entry.fl) {
+    resultsDiv.innerHTML += `<p><strong>Part of Speech:</strong> ${entry.fl}</p>`;
+  }
+
+  // Display short definitions
+  if (entry.shortdef && entry.shortdef.length > 0) {
+    resultsDiv.innerHTML += `<h4>Definitions:</h4>`;
+    entry.shortdef.forEach((def, index) => {
+      resultsDiv.innerHTML += `<p><strong>${index + 1}.</strong> ${def}</p>`;
+    });
+  }
+
+  // Display synonyms
+  if (entry.meta.syns && entry.meta.syns.length > 0) {
+    resultsDiv.innerHTML += `<h4>Synonyms:</h4>`;
+    entry.meta.syns.forEach((synGroup, index) => {
+      resultsDiv.innerHTML += `<p><strong>Group ${index + 1}:</strong> ${synGroup.join(', ')}</p>`;
+    });
+  }
+
+  // Display antonyms
+  if (entry.meta.ants && entry.meta.ants.length > 0) {
+    resultsDiv.innerHTML += `<h4>Antonyms:</h4>`;
+    entry.meta.ants.forEach((antGroup, index) => {
+      resultsDiv.innerHTML += `<p><strong>Group ${index + 1}:</strong> ${antGroup.join(', ')}</p>`;
+    });
+  }
+
+  // Display examples (if available)
+  if (entry.def && entry.def.length > 0) {
+    resultsDiv.innerHTML += `<h4>Examples:</h4>`;
+    entry.def.forEach((def, index) => {
+      if (def.sseq) {
+        def.sseq.forEach((sense) => {
+          sense.forEach((senseItem) => {
+            if (senseItem[0] === 'sense' && senseItem[1].dt) {
+              senseItem[1].dt.forEach((dtItem) => {
+                if (dtItem[0] === 'vis' && dtItem[1]) {
+                  dtItem[1].forEach((example) => {
+                    resultsDiv.innerHTML += `<p><em>${example.t}</em></p>`;
+                  });
+                }
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  // Show the search results
+  resultsDiv.classList.add('active');
+}
+
+
+
+async function searchWorOxford(APP_ID, APP_KEY){
+  const LANGUAGE = 'en-gb'; // Language code (English)
+  const word = document.getElementById('searchInput').value.trim();
+  if (!word) {
+    alert('Please enter a word.');
+    return;
+  }
+  const url = `https://od-api.oxforddictionaries.com/api/v2/entries/${LANGUAGE}/${word}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      app_id: APP_ID,
+      app_key: APP_KEY,
+      Accept: 'application/json',
+      mode: 'no-cors',
+    }
+  };
+  try {
+    const response = await fetch(url,options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+    document.getElementById('searchResults').innerHTML = '';
+    displayOxfordResults(data); // Display the results
+  } catch (error) {
+    console.error('Error fetching word data:', error);
+    alert('Failed to fetch word data. Please try again.');
+  }
+}
+function displayOxfordResults(data) {
+  const resultsDiv = document.getElementById('searchResults');
+
+  // Display the word
+  const word = data.word;
+  resultsDiv.innerHTML += `<h3>${word}</h3>`;
+
+  // Loop through each lexical entry
+  data.results.forEach(result => {
+    result.lexicalEntries.forEach(lexicalEntry => {
+      // Display part of speech
+      resultsDiv.innerHTML += `<p><strong>Part of Speech:</strong> ${lexicalEntry.lexicalCategory.text}</p>`;
+
+      // Loop through entries and senses
+      lexicalEntry.entries.forEach(entry => {
+        entry.senses.forEach(sense => {
+          // Display definitions
+          if (sense.definitions) {
+            sense.definitions.forEach((definition, index) => {
+              resultsDiv.innerHTML += `<p><strong>Definition ${index + 1}:</strong> ${definition}</p>`;
+            });
+          }
+
+          // Display examples
+          if (sense.examples) {
+            sense.examples.forEach(example => {
+              resultsDiv.innerHTML += `<p><em>Example:</em> ${example.text}</p>`;
+            });
+          }
+
+          // Display synonyms
+          if (sense.synonyms) {
+            resultsDiv.innerHTML += `<p><strong>Synonyms:</strong> ${sense.synonyms.map(syn => syn.text).join(', ')}</p>`;
+          }
+
+          // Display antonyms
+          if (sense.antonyms) {
+            resultsDiv.innerHTML += `<p><strong>Antonyms:</strong> ${sense.antonyms.map(ant => ant.text).join(', ')}</p>`;
+          }
+        });
+      });
+    });
+  });
+
+  // Show the search results
+  resultsDiv.classList.add('active');
+}
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function searchWordDefault() {
   const word = document.getElementById('searchInput').value.trim();
   if (!word) return;
 
@@ -24,10 +229,10 @@ async function searchWord() {
     const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
     const data = await response.json();
     if (data && data.length > 0) {
-        console.log(data);
+        // console.log(data);
         document.getElementById('searchResults').innerHTML = '';
         data.forEach(entry => {
-            displaySearchResults(entry); // Display results for each entry
+            displaySearchResultsDefault(entry); // Display results for each entry
             saveWord(entry); // Save each entry
           });
     } else {
@@ -42,7 +247,7 @@ async function searchWord() {
 }
 
 // Display search results
-  function displaySearchResults(entry) {
+  function displaySearchResultsDefault(entry) {
     const resultsDiv = document.getElementById('searchResults');
   
     // Display the word
@@ -229,7 +434,7 @@ function saveWord(entry) {
             console.log(data);
             document.getElementById('searchResults').innerHTML = '';
             data.forEach(entry => {
-                displaySearchResults(entry); // Display results for each entry
+                displaySearchResultsDefault(entry); // Display results for each entry
             });
         }*/
         // console.log("WordEntry:->",wordEntry);
