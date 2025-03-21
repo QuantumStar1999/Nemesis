@@ -2,4 +2,4 @@
     Permissions-Policy: geolocation=(), microphone=()
     X-Frame-Options: DENY
     X-Content-Type-Options: nosniff
-     Access-Control-Allow-Origin: github.com
+    Access-Control-Allow-Origin: https://quantumstar1999.github.io/Nemesis/
