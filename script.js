@@ -51,7 +51,7 @@ function searchWord(){
     const API_KEY = document.getElementById("OAPIKEY").value.trim();
     localStorage.setItem("OAPIID", API_ID);
     localStorage.setItem("OAPIKEY", API_KEY);
-    console.log(API_ID, API_KEY);
+    
     searchWorOxford(API_ID, API_KEY);
   }
 }
@@ -354,6 +354,7 @@ async function searchWorOxford(APP_ID, APP_KEY){
     alert('Please enter a word.');
     return;
   }
+  /*
   $.support.cors = false;
   const settings = {
   async: true,
@@ -370,6 +371,45 @@ async function searchWorOxford(APP_ID, APP_KEY){
 $.ajax(settings).done(function (response) {
   console.log(response);
 });
+*/
+/*
+const data = null;
+
+const xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+
+xhr.addEventListener('error', function () {
+  console.error('Request failed');
+});
+
+xhr.addEventListener('readystatechange', function () {
+  if (this.readyState === this.DONE) {
+    if (this.status === 200) {
+      console.log(this.responseText);
+    } else {
+      console.error('Error:', this.status, this.statusText);
+    }
+  }
+});
+
+xhr.open('GET', 'https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace');
+xhr.setRequestHeader('app_id', 'd75cbb6d');
+xhr.setRequestHeader('app_key', '83d953def94fe401d6b03384bebed339');
+xhr.setRequestHeader('Accept', 'application/json');
+
+xhr.send(data);*/
+fetch('https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace', {
+  method: 'GET',
+  headers: {
+    'app_id': 'd75cbb6d',
+    'app_key': '83d953def94fe401d6b03384bebed339',
+    'Content-Type': 'application/json',
+  },
+  credentials: 'include', // Include credentials if needed
+})
+  .then(response => response.content.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
 
   /*
   const proxyUrl = "https://cors-anywhere.herokuapp.com/";
