@@ -10,8 +10,16 @@ window.onload = () => {
   document.getElementById("OAPIKEY").value = localStorage.getItem("OAPIKEY") || "";
   document.getElementById("OAPIID").value = localStorage.getItem("OAPIID") || "";
   document.getElementById('dictType').value = localStorage.getItem("dictType") || "default";
+  document.getElementById('hoursSinceLastAsked').value = parseFloat(localStorage.getItem("hoursSinceLastAsked")) || 0;
+  
 };
-
+// Function to delete dictionary total
+function deleteDict(){
+  localStorage.removeItem('vocabWords');
+  localStorage.removeItem('vocabPriority');
+  wordData = [];
+  priority = {};
+}
 // Show the selected section
 function showSection(sectionId) {
   document.querySelectorAll('.section').forEach(section => {
@@ -43,11 +51,210 @@ function searchWord(){
     const API_KEY = document.getElementById("OAPIKEY").value.trim();
     localStorage.setItem("OAPIID", API_ID);
     localStorage.setItem("OAPIKEY", API_KEY);
+    console.log(API_ID, API_KEY);
     searchWorOxford(API_ID, API_KEY);
   }
 }
-async function searchWordDictionary(API, API_KEY){
+function saveWordDict(entry) {
+  const word = entry.hwi.hw; // Extract the word from the entry
+  const definitions = entry.shortdef || [];
+  console.log(definitions);
+  // Check if the word already exists in wordData
+  const existingWord = wordData.find(item => item.word === word);
+  if (existingWord) {
+    // Update synonyms and antonyms for the existing word
+    if (entry.meta.syns) {
+      existingWord.synonyms = [...new Set([...existingWord.synonyms, ...entry.meta.syns.flat(), ...definitions])];
+    }
+    if (entry.meta.ants) {
+      existingWord.antonyms = [...new Set([...existingWord.antonyms, ...entry.meta.ants.flat()])];
+    }
+  } else {
+    // Create a new entry with the word, synonyms, and antonyms
+    const synonyms = entry.meta.syns ? entry.meta.syns.flat() : [];
+    const antonyms = entry.meta.ants ? entry.meta.ants.flat() : [];
+    wordData.push({
+      word,
+      synonyms: [...new Set([...synonyms, ...definitions])], // Remove duplicates
+      antonyms: [...new Set(antonyms)]  // Remove duplicates
+    });
+  }
 
+  // Initialize priority if not already set
+  if (!priority[word]) {
+    priority[word] = { value: 0, lastAsked: Date.now() };
+  }
+
+  // Save to localStorage
+  localStorage.setItem('vocabWords', JSON.stringify(wordData));
+  localStorage.setItem('vocabPriority', JSON.stringify(priority));
+
+
+}
+async function searchWordDictionary(API, API_KEY){
+  const word = document.getElementById('searchInput').value.trim();
+  if (!word) return;
+
+  try {
+    const response = await fetch(`https://www.dictionaryapi.com/api/v3/references/${API}/json/${word}?key=${API_KEY}`);
+    const data = await response.json();
+    const data_filtered = data.filter(ele => ele?.hwi?.hw === word);    
+    console.log("Unfiltered",data);
+    console.log("Filtered",data_filtered);
+    document.getElementById('searchResults').innerHTML = '';
+    if (data_filtered && data_filtered.length > 0) {
+      document.getElementById('searchResults').innerHTML = '';
+      data_filtered.forEach(entry => {
+        displaySearchResultsDictionary(entry); // Display results for each entry
+        saveWordDict(entry);
+      });
+    } else {
+      alert('Word not found!');
+      document.getElementById('searchResults').classList.remove('active'); // Hide results
+    }
+  } catch (error) {
+    console.error('Error fetching word data:', error);
+    alert('Failed to fetch word data. Please try again.');
+    document.getElementById('searchResults').classList.remove('active'); // Hide results
+  }
+  
+}
+
+function displaySearchResultsDictionary(entry){
+  /*
+  const resultsDiv = document.getElementById('searchResults');
+
+  // Display the word
+  resultsDiv.innerHTML += `<h3>${entry.hwi.hw}</h3>`;
+
+  // Display part of speech
+  if (entry.fl) {
+    resultsDiv.innerHTML += `<p><strong>Part of Speech:</strong> ${entry.fl}</p>`;
+  }
+
+  // Display short definitions
+  if (entry.shortdef && entry.shortdef.length > 0) {
+    resultsDiv.innerHTML += `<h4>Definitions:</h4>`;
+    entry.shortdef.forEach((def, index) => {
+      resultsDiv.innerHTML += `<p><strong>${index + 1}.</strong> ${def}</p>`;
+    });
+  }
+
+  // Display synonyms
+  if (entry.meta.syns && entry.meta.syns.length > 0) {
+    resultsDiv.innerHTML += `<h4>Synonyms:</h4>`;
+    entry.meta.syns.forEach((synGroup, index) => {
+      resultsDiv.innerHTML += `<p><strong>Group ${index + 1}:</strong> ${synGroup.join(', ')}</p>`;
+    });
+  }
+
+  // Display antonyms
+  if (entry.meta.ants && entry.meta.ants.length > 0) {
+    resultsDiv.innerHTML += `<h4>Antonyms:</h4>`;
+    entry.meta.ants.forEach((antGroup, index) => {
+      resultsDiv.innerHTML += `<p><strong>Group ${index + 1}:</strong> ${antGroup.join(', ')}</p>`;
+    });
+  }
+
+  // Display examples (if available)
+  if (entry.def && entry.def.length > 0) {
+    resultsDiv.innerHTML += `<h4>Examples:</h4>`;
+    entry.def.forEach((def, index) => {
+      if (def.sseq) {
+        def.sseq.forEach((sense) => {
+          sense.forEach((senseItem) => {
+            if (senseItem[0] === 'sense' && senseItem[1].dt) {
+              senseItem[1].dt.forEach((dtItem) => {
+                if (dtItem[0] === 'vis' && dtItem[1]) {
+                  dtItem[1].forEach((example) => {
+                    resultsDiv.innerHTML += `<p><strong>${index + 1}:</strong><em>${example.t.replace(`{wi}`,`<b>`).replace(`{/wi}`,`</b>`)}</em></p>`;
+                  });
+                }
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
+  // Show the search results
+  resultsDiv.classList.add('active');
+  */
+  const resultsDiv = document.getElementById('searchResults');
+
+// Display the word
+resultsDiv.innerHTML += `
+  <h1 class="word-title">${entry.hwi.hw}</h1>
+`;
+
+// Display part of speech
+if (entry.fl) {
+  resultsDiv.innerHTML += `
+    <div class="part-of-speech">
+      <span class="part-of-speech-text">${entry.fl}</span>
+    </div>
+  `;
+}
+
+// Display definitions
+if (entry.shortdef && entry.shortdef.length > 0) {
+  resultsDiv.innerHTML += `
+    <div class="definitions">
+      <h2 class="section-title">Definitions</h2>
+      <ol class="definitions-list">
+        ${entry.shortdef.map((def, index) => {
+          let exampleHTML = '';
+          // Check for examples in the entry
+          if (entry.def && entry.def[index] && entry.def[index].sseq) {
+            entry.def[index].sseq.forEach((sense) => {
+              sense.forEach((senseItem) => {
+                if (senseItem[0] === 'sense' && senseItem[1].dt) {
+                  senseItem[1].dt.forEach((dtItem) => {
+                    if (dtItem[0] === 'vis' && dtItem[1]) {
+                      dtItem[1].forEach((example) => {
+                        exampleHTML += `
+                          <div class="example-item">
+                            <span class="example-text">${example.t.replace(`{wi}`, `<b>`).replace(`{/wi}`, `</b>`)}</span>
+                          </div>
+                        `;
+                      });
+                    }
+                  });
+                }
+              });
+            });
+          }
+          return `
+            <li class="definition-item">
+              <span class="definition-text">${def}</span>
+              ${exampleHTML}
+            </li>
+          `;
+        }).join('')}
+      </ol>
+    </div>
+  `;
+}
+
+// Display synonyms (if available)
+if (entry.meta.syns && entry.meta.syns.length > 0) {
+  resultsDiv.innerHTML += `
+    <div class="synonyms">
+      <h2 class="section-title">Synonyms</h2>
+      <ul class="synonyms-list">
+        ${entry.meta.syns.map((synGroup, index) => `
+          <li class="synonym-group">
+            <span class="synonym-text">${synGroup.join(', ')}</span>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+// Show the search results
+resultsDiv.classList.add('active');
 }
 async function searchWordThesaurus(API, API_KEY) {
 
@@ -58,13 +265,14 @@ async function searchWordThesaurus(API, API_KEY) {
     const response = await fetch(`https://www.dictionaryapi.com/api/v3/references/${API}/json/${word}?key=${API_KEY}`);
     const data = await response.json();
     const data_filtered = data.filter(ele => ele?.hwi?.hw === word);    
-    console.log("Uniltered",data);
+    console.log("Unfiltered",data);
     console.log("Filtered",data_filtered);
     document.getElementById('searchResults').innerHTML = '';
     if (data_filtered && data_filtered.length > 0) {
       document.getElementById('searchResults').innerHTML = '';
       data_filtered.forEach(entry => {
         displaySearchResultsThesaurus(entry); // Display results for each entry
+        saveWordDict(entry);
       });
     } else {
       alert('Word not found!');
@@ -137,7 +345,8 @@ function displaySearchResultsThesaurus(entry) {
   // Show the search results
   resultsDiv.classList.add('active');
 }
-
+// import fetch from 'node-fetch';
+// const axios = require('axios');
 async function searchWorOxford(APP_ID, APP_KEY){
   const LANGUAGE = 'en-gb'; // Language code (English)
   const word = document.getElementById('searchInput').value.trim();
@@ -145,31 +354,63 @@ async function searchWorOxford(APP_ID, APP_KEY){
     alert('Please enter a word.');
     return;
   }
-  const url = `https://od-api.oxforddictionaries.com/api/v2/entries/${LANGUAGE}/${word}`;
-  const options = {
-    method: 'GET',
-    headers: {
-      app_id: APP_ID,
-      app_key: APP_KEY,
-      Accept: 'application/json',
-      mode: 'no-cors',
-    }
-  };
-  try {
-    const response = await fetch(url,options);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log(data);
-    document.getElementById('searchResults').innerHTML = '';
-    displayOxfordResults(data); // Display the results
-  } catch (error) {
-    console.error('Error fetching word data:', error);
-    alert('Failed to fetch word data. Please try again.');
+  $.support.cors = false;
+  const settings = {
+  async: true,
+  crossDomain: true,
+  url: 'https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace',
+  method: 'GET',
+  headers: {
+    app_id: 'd75cbb6d',
+    app_key: '83d953def94fe401d6b03384bebed339',
+    Accept: 'application/json'
   }
+};
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+
+  /*
+  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+  const apiUrl = `https://od-api.oxforddictionaries.com/api/v2/entries/${LANGUAGE}/${word}`;
+  const myHeaders = new Headers();
+  myHeaders.append("app_id", String(APP_ID));
+  myHeaders.append("app_key", String(APP_KEY));
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow"
+  };
+  const options = {
+    // method: 'GET',
+    // // mode: 'cors',
+    // headers: {
+    //   'app_id': ,
+    //   'app_key': ,
+    //   'Accept': 'application/json',
+    //   'Access-Control-Allow-Origin' : "Test",
+    // }
+  };
+  // try {
+  //   const response = await fetch(apiUrl,options);
+
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! Status: ${response.status}`);
+  //   }
+
+  //   const data = await response.json();
+  //   console.log(data);
+  //   document.getElementById('searchResults').innerHTML = '';
+  //   displayOxfordResults(data); // Display the results
+  // } catch (error) {
+  //   console.error('Error fetching word data:', error);
+  //   alert('Failed to fetch word data. Please try again.');
+  // }
+  fetch(apiUrl, requestOptions)
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));*/
 }
 function displayOxfordResults(data) {
   const resultsDiv = document.getElementById('searchResults');
@@ -326,7 +567,7 @@ function saveWord(entry) {
     // Get the delay value from the input field
     const hoursSinceLastAskedInput = document.getElementById('hoursSinceLastAsked');
     const hoursSinceLastAskedValue = parseFloat(hoursSinceLastAskedInput.value) || 0;
-  
+    localStorage.setItem('hoursSinceLastAsked', hoursSinceLastAskedValue);
     // Get the selected question type
     const questionType = document.getElementById('questionType').value;
   
@@ -487,3 +728,44 @@ fileLabel.setAttribute('for', 'importFile');
 fileLabel.className = 'button file-label';
 fileLabel.innerText = 'Choose File';
 fileInput.parentNode.insertBefore(fileLabel, fileInput.nextSibling);
+
+/*
+// Replace with your Oxford Dictionary API credentials
+
+const APP_ID = '';
+const APP_KEY = '';
+
+// CORS proxy URL
+const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+
+// Function to fetch word definition
+async function fetchWordDefinition(word) {
+    const API_URL = `https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/${word}`;
+    const url = PROXY_URL + API_URL; // Use the CORS proxy
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'app_id': APP_ID,
+                'app_key': APP_KEY,
+                'Accept': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Response:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching word definition:', error);
+        return null;
+    }
+}
+
+// Example usage
+fetchWordDefinition('ace');
+*/

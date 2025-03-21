@@ -437,3 +437,218 @@ label {
   margin-right: 20px;
 } 
 
+/* Search Results Styling */
+/* #searchResults {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#searchResults.active {
+  display: block;
+}
+
+#searchResults h3 {
+  font-size: 24px;
+  color: #1a0dab;
+  margin-bottom: 16px;
+}
+
+.part-of-speech {
+  margin-bottom: 20px;
+}
+
+.part-of-speech h4 {
+  font-size: 18px;
+  color: #202124;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.part-of-speech .meaning {
+  margin-bottom: 8px;
+  color: #4d5156;
+}
+
+.part-of-speech .meaning strong {
+  color: #202124;
+}
+
+.part-of-speech .meaning em {
+  display: block;
+  color: #70757a;
+  margin-top: 4px;
+}
+
+.part-of-speech p {
+  margin-top: 8px;
+  color: #4d5156;
+}
+
+.part-of-speech p strong {
+  color: #202124;
+}
+
+
+.definitions-card {
+  margin-bottom: 20px;
+}
+
+.definitions-card h2 {
+  font-size: 18px;
+  color: #6200ea;
+  margin-bottom: 12px;
+}
+
+.definitions-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.definition-item {
+  margin-bottom: 10px;
+  color: #4d5156;
+}
+
+.definition-number {
+  font-weight: bold;
+  color: #202124;
+  margin-right: 8px;
+}
+
+
+.synonyms-card, .antonyms-card {
+  margin-bottom: 20px;
+}
+
+.synonyms-card h2, .antonyms-card h2 {
+  font-size: 18px;
+  color: #6200ea;
+  margin-bottom: 12px;
+}
+
+.synonym-group, .antonym-group {
+  margin-bottom: 12px;
+}
+
+.group-title {
+  font-weight: bold;
+  color: #202124;
+}
+
+.synonym-list, .antonym-list {
+  color: #4d5156;
+}
+
+
+.examples-card {
+  margin-bottom: 20px;
+}
+
+.examples-card h2 {
+  font-size: 18px;
+  color: #6200ea;
+  margin-bottom: 12px;
+}
+
+.example-item {
+  margin-bottom: 10px;
+}
+
+.example-text {
+  font-style: italic;
+  color: #70757a;
+}
+
+.example-number {
+  font-weight: bold;
+  color: #202124;
+  margin-right: 8px;
+} */
+ /* Word Title */
+.word-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1a0dab;
+  margin-bottom: 8px;
+}
+
+/* Part of Speech */
+.part-of-speech {
+  font-size: 1.1rem;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+/* Definitions */
+.definitions {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #1a0dab;
+  margin-bottom: 12px;
+}
+
+.definitions-list {
+  list-style-type: decimal;
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.definition-item {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.definition-text {
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Examples */
+.example-item {
+  font-size: 1rem;
+  color: #666;
+  margin-left: 20px;
+  margin-bottom: 8px;
+}
+
+.example-text {
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.example-text b {
+  font-weight: bold;
+  color: #1a0dab;
+}
+
+/* Synonyms */
+.synonyms {
+  margin-bottom: 24px;
+}
+
+.synonyms-list {
+  list-style-type: disc;
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.synonym-group {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.synonym-text {
+  line-height: 1.6;
+}
