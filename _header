@@ -1,0 +1,5 @@
+/*
+  Permissions-Policy: geolocation=(), microphone=()
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Access-Control-Allow-Origin: https://developer.oxforddictionaries.com
