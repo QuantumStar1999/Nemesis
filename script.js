@@ -354,6 +354,23 @@ async function searchWorOxford(APP_ID, APP_KEY){
     alert('Please enter a word.');
     return;
   }
+  const url = 'https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace';
+const options = {
+  method: 'GET',
+  headers: {
+    app_id: 'd75cbb6d',
+    app_key: '83d953def94fe401d6b03384bebed339',
+    Accept: 'application/json'
+  }
+};
+
+try {
+  const response = await fetch(url, options);
+  const data = await response.json();
+  console.log(data);
+} catch (error) {
+  console.error(error);
+}
   /*
   $.support.cors = false;
   const settings = {
@@ -387,7 +404,7 @@ xhr.addEventListener('readystatechange', function () {
     if (this.status === 200) {
       console.log(this.responseText);
     } else {
-      console.error('Error:', this.status, this.statusText);
+      console.error('Error:', this.status, this);
     }
   }
 });
@@ -397,7 +414,9 @@ xhr.setRequestHeader('app_id', 'd75cbb6d');
 xhr.setRequestHeader('app_key', '83d953def94fe401d6b03384bebed339');
 xhr.setRequestHeader('Accept', 'application/json');
 
-xhr.send(data);*/
+xhr.send(data);
+*/
+/*
 fetch('https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace', {
   method: 'GET',
   headers: {
@@ -410,6 +429,7 @@ fetch('https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace', 
   .then(response => response.content.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
+  */
 
   /*
   const proxyUrl = "https://cors-anywhere.herokuapp.com/";
