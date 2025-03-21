@@ -21,35 +21,6 @@
 
     <!-- Search Section -->
     <section id="search" class="section active">
-      <h2>Configure</h2>
-      <div class="config-box">
-        <div class="input-group">
-          <label for="TAPIKEY">Thesaurus API:</label>
-          <input type="text" id="TAPIKEY" placeholder="Thesaurus API Key">
-        </div>
-        <div class="input-group">
-          <label for="DAPIKEY">Dictionary API:</label>
-          <input type="text" id="DAPIKEY" placeholder="Dictionary API Key">
-        </div>
-        <div class="input-group">
-          <label for="OAPIID">Oxford APP ID:</label>
-          <input type="text" id="OAPIID" placeholder="Oxford API APP ID">
-        </div>
-        <div class="input-group">
-          <label for="OAPIKEY">Oxford Key:</label>
-          <input type="text" id="OAPIKEY" placeholder="Oxford API Key">
-        </div>
-        <div class="dict-group">
-          <label for="dictType">Type of Questions: </label>
-          <select id="dictType"class="dict-class">
-            <option value="default" selected>default</option>
-            <option value="TAPIKEY" >Webster Thesaurus</option>
-            <option value="DAPIKEY">Webster Dictionary</option>
-            <option value="OAPIKEY">Oxford</option>
-          </select>
-        </div>
-
-      </div>
       <h2>Search</h2>
       <div class="search-box">
         
@@ -90,6 +61,34 @@
   
   <!-- Download Section -->
   <section id="download" class="section">
+    <h2>Configure</h2>
+      <div class="config-box">
+        <div class="input-group">
+          <label for="TAPIKEY">Thesaurus API:</label>
+          <input type="text" id="TAPIKEY" placeholder="Thesaurus API Key">
+        </div>
+        <div class="input-group">
+          <label for="DAPIKEY">Dictionary API:</label>
+          <input type="text" id="DAPIKEY" placeholder="Dictionary API Key">
+        </div>
+        <div class="input-group">
+          <label for="OAPIID">Oxford APP ID:</label>
+          <input type="text" id="OAPIID" placeholder="Oxford API APP ID">
+        </div>
+        <div class="input-group">
+          <label for="OAPIKEY">Oxford Key:</label>
+          <input type="text" id="OAPIKEY" placeholder="Oxford API Key">
+        </div>
+        <div class="dict-group">
+          <label for="dictType">Type of Questions: </label>
+          <select id="dictType"class="dict-class">
+            <option value="default" selected>default</option>
+            <option value="TAPIKEY" >Webster Thesaurus</option>
+            <option value="DAPIKEY">Webster Dictionary</option>
+            <option value="OAPIKEY">Oxford</option>
+          </select>
+        </div>
+      </div>
     <h2>Settings</h2>
     <button class="button" onclick="exportData()">Export Vocabulary</button>
     <input type="file" id="importFile" class="file-input" accept=".json">
