@@ -360,14 +360,17 @@ async function searchWorOxford(APP_ID, APP_KEY){
     headers: {
       'app_id': 'd75cbb6d',
       'app_key': '83d953def94fe401d6b03384bebed339',
-      'Accept': '*',
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
+      // 'Content-Type': 'application/x-www-form-urlencoded',
     }
 };
 const fetchPromise = fetch(url, options);
 
 fetchPromise
-  .then((response) => response.json())
+  .then((response) => {
+    console.log("response.url =", response.url); 
+    return response.json();
+  })
   .then((data) => {
     console.log(data);
   });
