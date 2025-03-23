@@ -355,22 +355,30 @@ async function searchWorOxford(APP_ID, APP_KEY){
     return;
   }
   const url = 'https://od-api-sandbox.oxforddictionaries.com/api/v2/entries/en-gb/ace';
-const options = {
-  method: 'GET',
-  headers: {
-    app_id: 'd75cbb6d',
-    app_key: '83d953def94fe401d6b03384bebed339',
-    Accept: 'application/json'
-  }
+  const options = {
+    method: 'GET',
+    headers: {
+      'app_id': 'd75cbb6d',
+      'app_key': '83d953def94fe401d6b03384bebed339',
+      'Accept': '*',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
 };
+const fetchPromise = fetch(url, options);
 
+fetchPromise
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+  });
+/*
 try {
   const response = await fetch(url, options);
   const data = await response.json();
   console.log(data);
 } catch (error) {
   console.error(error);
-}
+}*/
   /*
   $.support.cors = false;
   const settings = {
